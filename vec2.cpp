@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
-#include "vec2.h"
+#include "Vec2.h"
 
 //setting a vector
 void Vec2::set(float i, float j) {
@@ -105,4 +105,3 @@ Vec2 Vec2::copy(Vec2 v) {
     Vec2 copy(v.x, v.y);
     return copy;
 }
-
