@@ -1,8 +1,10 @@
-#include <SFML/Graphics.hpp>
-#include "Vec2.h"
-
 #include <iostream>
 using namespace std;
+
+#include <SFML/Graphics.hpp>
+
+#include "Vec2.h"
+#include "Boid.h"
 
 int main()
 {
@@ -12,8 +14,14 @@ int main()
     vector<sf::CircleShape> shapes;
     for (int i = 0; i < 10; i++) {
       sf::CircleShape shape(10.f);
-      shape.setPosition(i * 100, i * 10);
+      shape.setPosition(800, 500);
       shapes.push_back(shape);
+    }
+
+    vector<Boid> boids;
+    for (int i = 0; i < 10; i++) {
+        Boid b(800, 500);
+        boids.push_back(b);
     }
 
     while (window.isOpen())
@@ -29,10 +37,11 @@ int main()
 
         // move
         for (int i = 0; i < shapes.size(); i++) {
-          sf::Vector2f pos = shapes[i].getPosition();
-          float x = pos.x + 1;
-          float y = pos.y;
-          shapes[i].setPosition(x, y);
+          // sf::Vector2f pos = shapes[i].getPosition();
+          // float x = pos.x + 1;
+          // float y = pos.y;
+          boids[i].update();
+          shapes[i].setPosition(boids[i].position.x, boids[i].position.y);
         }
 
 

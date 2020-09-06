@@ -13,7 +13,7 @@ void Vec2::set(float i, float j) {
 //adds two vectors
 void Vec2::addV(Vec2 v) {
     x += v.x;
-    y +=  v.y;
+    y += v.y;
 }
 
 //adds some scalar, s, to vector

@@ -15,8 +15,13 @@ main.o: main.cpp
 Vec2.o: Vec2.cpp
 	$(CXX) -c Vec2.cpp
 
-$(TARGET): main.o Vec2.o
-	$(CXX) main.o Vec2.o -o $(TARGET) $(LDFLAGS)
+Boid.o:
+	$(CXX) -c Boid.cpp
+
+$(TARGET): main.o Vec2.o Boid.o
+	$(CXX) main.o Vec2.o Boid.o -o $(TARGET) $(LDFLAGS)
+
+.PHONY: clean
 
 clean:
 	rm -f *.o *~ $(TARGET)
