@@ -5,6 +5,11 @@
 #include "Boid.h"
 #include "Vec2.h"
 
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
 Boid::Boid(float x, float y) {
     position = Vec2(x, y);
 
@@ -12,6 +17,15 @@ Boid::Boid(float x, float y) {
     velocity = Vec2(.5 * cos(phi), .5 *sin(phi));
 
     acceleration = Vec2(0, 0);
+}
+
+void Boid::output(ofstream& out) {
+    // out << position.x << " " << position.y << endl;
+    
+    out << position.x << " " << position.y << endl;
+    // out << acceleration.x << " " << acceleration.y << endl;
+    out << velocity.x << " " << velocity.y << endl;
+
 }
 
 void Boid::update() {

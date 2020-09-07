@@ -6,6 +6,11 @@ using namespace std;
 #include "Vec2.h"
 #include "Boid.h"
 
+#include <iostream>
+#include <fstream>
+
+#include <string>
+
 #define BOID_COUNT 100
 #define WIDTH 1600
 #define HEIGHT 1000
@@ -40,13 +45,30 @@ int main()
         window.clear();
 
         // move
+        // ofstream datafile;
+        // datafile.open ("data.txt");
+
+        ofstream out;
+        out.open("data.txt");
         for (int i = 0; i < shapes.size(); i++) {
           // sf::Vector2f pos = shapes[i].getPosition();
           // float x = pos.x + 1;
           // float y = pos.y;
           boids[i].update();
           shapes[i].setPosition(boids[i].position.x, boids[i].position.y);
+
+          // cout << "--------" << i << "--------" << endl;
+          boids[i].output(out);
+          // datafile << boids[i].position.x << " " << boids[i].position.y << endl;
+          // datafile << boids[i].acceleration.x << " " << boids[i].acceleration.y << endl;
+          // datafile << boids[i].velocity.x << " " << boids[i].velocity.y << endl;
+          // datafile ;
+          // datafile << boids[i].velocity << endl;
+
+
         }
+        // datafile.close();
+        out.close();
 
 
         for (int i = 0; i < shapes.size(); i++) {
