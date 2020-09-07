@@ -10,20 +10,73 @@ using namespace std;
 #define WIDTH 1600
 #define HEIGHT 1000
 
-int main()
+void simulate_boids(count);
+void display_boids(count);
+
+int main(int argc, char *argv[])
 {
+    if (argc < 2) {
+        cout << "usage: " << argv[0] << " [simulate | display] boid_count" << endl;
+        exit(1);
+    }
+    string command = string(argv[1]);
+    string scount;
+    int b_count = BOID_COUNT;
+    if (argc > 2) {
+        try {
+            scount = string(argv[2]);
+            b_count = stoi(scount);
+            if (b_count < 1)
+                throw range_error("NO");
+        } catch (exception const &e) {
+            cout << "error: invalid integer " << scount << endl;
+            exit(1);
+        }
+    }
+
+    bool simulate = false;
+    bool display = false;
+
+    if (command == "simulate") {
+        cout << "simulating " << b_count << " boids..." << endl;
+        simulate = true;
+    } else if (command == "display") {
+        cout << "displaying " << "boids..." << endl;
+        display = true;
+    } else {
+        cout << "error: unrecognized command " << command << endl;
+        exit(1);
+    }
+
+    if (simulate) {
+        simulate_boids(b_count);
+    } else if (display) {
+        display_boids(b_count);
+    }
+
+    return 0;
+}
+
+void simulate_boids(count) {
+    // TODO: file output
+    return;
+}
+
+void display_boids(count) {
+    // TODO: file input
+
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
     // sf::CircleShape shape(100.f);
     // shape.setFillColor(sf::Color::Green);
     vector<sf::CircleShape> shapes;
-    for (int i = 0; i < BOID_COUNT; i++) {
+    for (int i = 0; i < count; i++) {
       sf::CircleShape shape(10.f);
       shape.setPosition(WIDTH/2, HEIGHT/2);
       shapes.push_back(shape);
     }
 
     vector<Boid> boids;
-    for (int i = 0; i < BOID_COUNT; i++) {
+    for (int i = 0; i < count; i++) {
         Boid b(WIDTH/2, HEIGHT/2);
         boids.push_back(b);
     }
@@ -39,23 +92,19 @@ int main()
 
         window.clear();
 
-        // move
+        // move boids and update shapes
         for (int i = 0; i < shapes.size(); i++) {
-          // sf::Vector2f pos = shapes[i].getPosition();
-          // float x = pos.x + 1;
-          // float y = pos.y;
           boids[i].update();
           shapes[i].setPosition(boids[i].position.x, boids[i].position.y);
         }
 
-
+        // draw the shapes
         for (int i = 0; i < shapes.size(); i++) {
           window.draw(shapes[i]);
         }
 
-        // window.draw(shape);
         window.display();
     }
 
-    return 0;
+    return;
 }
