@@ -6,21 +6,25 @@ using namespace std;
 #include "Vec2.h"
 #include "Boid.h"
 
+#define BOID_COUNT 100
+#define WIDTH 1600
+#define HEIGHT 1000
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1600, 1000), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
     // sf::CircleShape shape(100.f);
     // shape.setFillColor(sf::Color::Green);
     vector<sf::CircleShape> shapes;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < BOID_COUNT; i++) {
       sf::CircleShape shape(10.f);
-      shape.setPosition(800, 500);
+      shape.setPosition(WIDTH/2, HEIGHT/2);
       shapes.push_back(shape);
     }
 
     vector<Boid> boids;
-    for (int i = 0; i < 10; i++) {
-        Boid b(800, 500);
+    for (int i = 0; i < BOID_COUNT; i++) {
+        Boid b(WIDTH/2, HEIGHT/2);
         boids.push_back(b);
     }
 

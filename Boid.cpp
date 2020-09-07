@@ -7,7 +7,10 @@
 
 Boid::Boid(float x, float y) {
     position = Vec2(x, y);
-    velocity = Vec2((rand() % 3) - 2, (rand() % 3) - 2);
+
+    float phi = 2 * M_PI * ((float)rand()/RAND_MAX);
+    velocity = Vec2(.5 * cos(phi), .5 *sin(phi));
+
     acceleration = Vec2(0, 0);
 }
 
