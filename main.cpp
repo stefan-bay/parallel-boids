@@ -6,10 +6,11 @@ using namespace std;
 #include "Vec2.h"
 #include "Boid.h"
 
-#include <iostream>
 #include <fstream>
+#include <csignal>
 
 #include <string>
+#include <sstream>
 
 #define BOID_COUNT 100
 #define WIDTH 1600
@@ -18,8 +19,19 @@ using namespace std;
 void simulate_boids(float count);
 void display_boids(float count);
 
+sig_atomic_t should_exit = 0;
+
+// allows us to manually control the exit
+void exithandler(int i) {
+    cout << endl << "Exiting..." << endl;
+    should_exit = 1;
+}
+
 int main(int argc, char *argv[])
 {
+    // overide ctrl-c
+    signal(SIGINT, exithandler);
+
     if (argc < 2) {
         cout << "usage: " << argv[0] << " [simulate | display] boid_count" << endl;
         exit(1);
@@ -66,31 +78,51 @@ void simulate_boids(float count) {
     // TODO: file output
     // boids[i].output(out);
     //outfile.open("test.txt", std::ios_base::app);
-
-    vector<Boid> boids;
-      for (int i = 0; i < count; i++) {
-          Boid b(WIDTH/2, HEIGHT/2);
-          boids.push_back(b);
-      }
     ofstream out;
     out.open("data.txt", ios_base::app);
+
+    vector<Boid> boids;
+    // initialize boids
+    for (int i = 0; i < count; i++) {
+        Boid b(WIDTH/2, HEIGHT/2);
+        boids.push_back(b);
+        // output initial positions
+        b.output(out);
+    }
+
     while (true) {
-        // move boids
+        if (should_exit) {
+            // cout << "continue..." << endl;
+            out.close();
+            exit(0);
+        }
+        // move boids TODO: PARALLELIZE
         for (int i = 0; i < boids.size(); i++) {
-          boids[i].update();
-          boids[i].output(out);
+            boids[i].update();
+        }
+
+        // output their positions
+        for (int i = 0; i < boids.size(); i++) {
+            boids[i].output(out);
         }
     }
     out.close();
 }
 
+vector<float> values_for_string (string input) {
+    istringstream iss(input);
+    string s;
+    vector<float> values;
+    while ( getline( iss, s, ' ' ) ) {
+        values.push_back(stof(s));
+    }
+
+    return values;
+}
+
 void display_boids(float count) {
-    // TODO: file input
-
-
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
-    // sf::CircleShape shape(100.f);
-    // shape.setFillColor(sf::Color::Green);
+
     vector<sf::CircleShape> shapes;
     for (int i = 0; i < count; i++) {
       sf::CircleShape shape(10.f);
@@ -98,14 +130,14 @@ void display_boids(float count) {
       shapes.push_back(shape);
     }
 
-    vector<Boid> boids;
-    for (int i = 0; i < count; i++) {
-        Boid b(WIDTH/2, HEIGHT/2);
-        boids.push_back(b);
-    }
+    ifstream data_file ("data.txt");
 
     while (window.isOpen())
     {
+        // if (should_exit) {
+        //     cout << "Exiting..." << endl;
+        //     exit(0);
+        // }
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -117,7 +149,12 @@ void display_boids(float count) {
 
         // draw the shapes
         for (int i = 0; i < shapes.size(); i++) {
-          window.draw(shapes[i]);
+            string line;
+            getline(data_file, line);
+            vector<float> values = values_for_string(line);
+
+            shapes[i].setPosition(values[0], values[1]);
+            window.draw(shapes[i]);
         }
 
         window.display();

@@ -80,7 +80,7 @@ float Vec2::magnitude() const {
 
 void Vec2::setMagnitude(float m) {
     normalize();
-    multiplyS(x);
+    multiplyS(m);
 }
 
 float Vec2::angle(Vec2 v) {
