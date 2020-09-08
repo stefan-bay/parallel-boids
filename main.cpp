@@ -5,6 +5,8 @@ using namespace std;
 
 #include "Vec2.h"
 #include "Boid.h"
+#include "defaults.h"
+
 
 #include <fstream>
 #include <csignal>
@@ -14,9 +16,6 @@ using namespace std;
 #include <string>
 #include <sstream>
 
-#define BOID_COUNT 100
-#define WIDTH 1600
-#define HEIGHT 1000
 
 void simulate_boids(float count);
 void display_boids(float count);
@@ -82,7 +81,7 @@ void simulate_boids(float count) {
     vector<Boid> boids;
     // initialize boids
     for (int i = 0; i < count; i++) {
-        Boid b(WIDTH/2, HEIGHT/2);
+        Boid b(rand()%1000, rand()%1000);
         boids.push_back(b);
     }
 

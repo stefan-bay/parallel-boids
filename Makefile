@@ -10,7 +10,7 @@ TARGET = boids.out
 all: $(TARGET)
 
 main.o: main.cpp
-	$(CXX) -c main.cpp # $(INCLUDE)
+	$(CXX) -c main.cpp
 
 Vec2.o: Vec2.cpp
 	$(CXX) -c Vec2.cpp

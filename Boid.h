@@ -16,9 +16,10 @@ public:
 
     void update();
 
-    void set_all(const char* input);
-
-    void output(std::ofstream& var);
+private:
+    void boundary_check();
+    
 };
+
 
 #endif
