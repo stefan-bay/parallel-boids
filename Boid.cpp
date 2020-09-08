@@ -32,6 +32,9 @@ void Boid::boundary_check() {
         position.x = WIDTH - tmp;
     }
 }
+void Boid::turn() {
+    
+}
 void Boid::update() {
     position.addV(velocity);
     velocity.addV(acceleration);

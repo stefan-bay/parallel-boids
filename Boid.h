@@ -18,7 +18,7 @@ public:
 
 private:
     void boundary_check();
-    
+    void turn();
 };
 
 
