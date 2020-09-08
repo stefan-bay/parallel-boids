@@ -19,12 +19,10 @@ Boid::Boid(float x, float y) {
     acceleration = Vec2(0, 0);
 }
 
-void Boid::output(ofstream& out) {
-    // out << position.x << " " << position.y << endl;
-    
-    out << position.x << " " << position.y << endl;
+void Boid::output(ofstream& out) {    
+    out << position.x << " " << position.y;
     // out << acceleration.x << " " << acceleration.y << endl;
-    out << velocity.x << " " << velocity.y << endl;
+    out << " " << velocity.x << " " << velocity.y << endl;
 
 }
 

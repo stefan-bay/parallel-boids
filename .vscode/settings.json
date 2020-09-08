@@ -4,6 +4,10 @@
         "fstream": "cpp",
         "locale": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "vector": "cpp",
+        "__node_handle": "cpp"
     }
 }

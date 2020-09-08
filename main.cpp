@@ -64,11 +64,29 @@ int main(int argc, char *argv[])
 
 void simulate_boids(float count) {
     // TODO: file output
-    return;
+    // boids[i].output(out);
+    //outfile.open("test.txt", std::ios_base::app);
+
+    vector<Boid> boids;
+      for (int i = 0; i < count; i++) {
+          Boid b(WIDTH/2, HEIGHT/2);
+          boids.push_back(b);
+      }
+    ofstream out;
+    out.open("data.txt", ios_base::app);
+    while (true) {
+        // move boids
+        for (int i = 0; i < boids.size(); i++) {
+          boids[i].update();
+          boids[i].output(out);
+        }
+    }
+    out.close();
 }
 
 void display_boids(float count) {
     // TODO: file input
+
 
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
     // sf::CircleShape shape(100.f);
@@ -96,30 +114,6 @@ void display_boids(float count) {
         }
 
         window.clear();
-
-        // move
-        // ofstream datafile;
-        // datafile.open ("data.txt");
-
-        ofstream out;
-        out.open("data.txt");
-        // move boids and update shapes
-        for (int i = 0; i < shapes.size(); i++) {
-          boids[i].update();
-          shapes[i].setPosition(boids[i].position.x, boids[i].position.y);
-
-          // cout << "--------" << i << "--------" << endl;
-          boids[i].output(out);
-          // datafile << boids[i].position.x << " " << boids[i].position.y << endl;
-          // datafile << boids[i].acceleration.x << " " << boids[i].acceleration.y << endl;
-          // datafile << boids[i].velocity.x << " " << boids[i].velocity.y << endl;
-          // datafile ;
-          // datafile << boids[i].velocity << endl;
-
-
-        }
-        // datafile.close();
-        out.close();
 
         // draw the shapes
         for (int i = 0; i < shapes.size(); i++) {
