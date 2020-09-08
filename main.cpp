@@ -9,6 +9,8 @@ using namespace std;
 #include <fstream>
 #include <csignal>
 
+#include <stdio.h>
+
 #include <string>
 #include <sstream>
 
@@ -75,49 +77,34 @@ int main(int argc, char *argv[])
 }
 
 void simulate_boids(float count) {
-    // TODO: file output
-    // boids[i].output(out);
-    //outfile.open("test.txt", std::ios_base::app);
-    ofstream out;
-    out.open("data.txt", ios_base::app);
+    FILE *out = fopen("data.dat", "a");
 
     vector<Boid> boids;
     // initialize boids
     for (int i = 0; i < count; i++) {
         Boid b(WIDTH/2, HEIGHT/2);
         boids.push_back(b);
-        // output initial positions
-        b.output(out);
     }
 
     while (true) {
         if (should_exit) {
-            // cout << "continue..." << endl;
-            out.close();
+            fclose(out);
             exit(0);
-        }
-        // move boids TODO: PARALLELIZE
-        for (int i = 0; i < boids.size(); i++) {
-            boids[i].update();
         }
 
         // output their positions
         for (int i = 0; i < boids.size(); i++) {
-            boids[i].output(out);
+            // boids[i].output(out);
+            float values[] = {boids[i].position.x, boids[i].position.y, boids[i].velocity.x, boids[i].velocity.y};
+            fwrite(&values, sizeof(float), 4, out);
+        }
+
+        // move boids TODO: PARALLELIZE
+        for (int i = 0; i < boids.size(); i++) {
+            boids[i].update();
         }
     }
-    out.close();
-}
-
-vector<float> values_for_string (string input) {
-    istringstream iss(input);
-    string s;
-    vector<float> values;
-    while ( getline( iss, s, ' ' ) ) {
-        values.push_back(stof(s));
-    }
-
-    return values;
+    fclose(out);
 }
 
 void display_boids(float count) {
@@ -130,35 +117,54 @@ void display_boids(float count) {
       shapes.push_back(shape);
     }
 
-    ifstream data_file ("data.txt");
+    FILE *in = fopen("data.dat", "r");
+    fseek(in, 0, SEEK_END);
+    size_t filesize = ftell(in);
+    fseek(in, 0, SEEK_SET);
 
-    while (window.isOpen())
+    while (window.isOpen() && ftell(in) <= (filesize - count))
     {
-        // if (should_exit) {
-        //     cout << "Exiting..." << endl;
-        //     exit(0);
-        // }
+        if (should_exit) {
+            cout << "Exiting..." << endl;
+            fclose(in);
+            exit(0);
+        }
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
+                cout << "Exiting..." << endl;
+                fclose(in);
                 window.close();
+                exit(0);
+            }
         }
 
         window.clear();
 
-        // draw the shapes
-        for (int i = 0; i < shapes.size(); i++) {
-            string line;
-            getline(data_file, line);
-            vector<float> values = values_for_string(line);
 
-            shapes[i].setPosition(values[0], values[1]);
+        // store all of boid values for this frame
+        float *values = (float *)malloc(sizeof(float) * 4 * count);
+        fread(values, sizeof(float), 4 * count, in);
+        fseek(in, sizeof(float) * 4 * count, SEEK_CUR);
+
+        // update and draw the shapes
+        for (int i = 0; i < count; i++) {
+            // update positions
+            shapes[i].setPosition(values[(4 * i) + 0], values[(4 * i) + 1]);
+
+            // draw shapes
             window.draw(shapes[i]);
         }
 
         window.display();
     }
+
+    cout << "Exiting..." << endl;
+    fclose(in);
+    window.close();
+    exit(0);
+
 
     return;
 }

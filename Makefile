@@ -24,5 +24,4 @@ $(TARGET): main.o Vec2.o Boid.o
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ data.txt $(TARGET)
-	
+	rm -f *.o *~ data.txt data.dat $(TARGET)
