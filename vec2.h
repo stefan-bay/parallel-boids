@@ -17,14 +17,14 @@ public:
     }
 
     void set(float x, float y);
-    
+
     void addV(Vec2 v);
     void addS(float scalar);
 
     void subV(Vec2 v);
     void subS(float x);
 
-    Vec2 subtract(Vec2 v1, Vec2 v2);
+    static Vec2 subtract(Vec2 v1, Vec2 v2);
 
     void multiplyV(Vec2 v);
     void multiplyS(float x);
@@ -39,8 +39,10 @@ public:
     float angle(Vec2 v);
     void normalize();
 
+    void limit(float m);
+
     static Vec2 copy(Vec2 v);
-    
+
 
 };
 

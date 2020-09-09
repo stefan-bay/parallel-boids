@@ -101,7 +101,7 @@ void simulate_boids(float count) {
 
         // move boids TODO: PARALLELIZE
         for (int i = 0; i < boids.size(); i++) {
-            boids[i].update();
+            boids[i].update(boids);
         }
     }
     fclose(out);
@@ -112,7 +112,7 @@ void display_boids(float count) {
 
     vector<sf::CircleShape> shapes;
     for (int i = 0; i < count; i++) {
-      sf::CircleShape shape(1.f);
+      sf::CircleShape shape(5.f);
       shape.setPosition(WIDTH/2, HEIGHT/2);
       shapes.push_back(shape);
     }
@@ -158,6 +158,7 @@ void display_boids(float count) {
         }
 
         window.display();
+        sf::sleep(sf::milliseconds(10));
     }
 
     cout << "Exiting..." << endl;

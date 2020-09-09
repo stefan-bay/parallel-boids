@@ -101,6 +101,13 @@ void Vec2::normalize() {
     }
 }
 
+void Vec2::limit(float m) {
+    double size = magnitude();
+    if (size > m) {
+        set(x / size, y / size);
+    }
+}
+
 Vec2 Vec2::copy(Vec2 v) {
     Vec2 copy(v.x, v.y);
     return copy;
