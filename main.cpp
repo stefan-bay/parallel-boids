@@ -82,6 +82,7 @@ void simulate_boids(float count) {
     // initialize boids
     for (int i = 0; i < count; i++) {
         Boid b(rand()%WIDTH, rand()%HEIGHT);
+        // Boid b(WIDTH/2, HEIGHT/2);
         boids.push_back(b);
     }
 
@@ -111,7 +112,7 @@ void display_boids(float count) {
 
     vector<sf::CircleShape> shapes;
     for (int i = 0; i < count; i++) {
-      sf::CircleShape shape(5.f);
+      sf::CircleShape shape(1.f);
       shape.setPosition(WIDTH/2, HEIGHT/2);
       shapes.push_back(shape);
     }

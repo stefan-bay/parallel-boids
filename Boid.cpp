@@ -31,9 +31,19 @@ void Boid::boundary_check() {
         position.y = 0;
         position.x = WIDTH - tmp;
     }
+    if (position.x < 0) {
+        float tmp = position.y;
+        position.x = WIDTH;
+        position.y = HEIGHT - tmp;
+    }
+    if (position.y < 0) {
+        float tmp = position.x;
+        position.y = HEIGHT;
+        position.x = WIDTH - tmp;
+    }
 }
 void Boid::turn() {
-    
+
 }
 void Boid::update() {
     position.addV(velocity);
