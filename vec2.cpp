@@ -27,6 +27,11 @@ void Vec2::subS(float s) {
     x -= s;
     y -= s;
 }
+void Vec2::subV(Vec2 v) {
+    x -= v.x;
+    y -= v.y;
+}
+
 
 Vec2 Vec2::subtract(Vec2 v1, Vec2 v2) {
     Vec2 resultV;

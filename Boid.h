@@ -20,7 +20,7 @@ public:
     Boid (float x, float y);
 
     Vec2 align(vector<Boid> boids);
-
+    Vec2 cohesion(vector<Boid> boids);
     void update(vector<Boid> boids);
 
 private:

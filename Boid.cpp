@@ -19,8 +19,8 @@ Boid::Boid(float x, float y) {
     velocity = Vec2(.5 * cos(phi), .5 *sin(phi));
     acceleration = Vec2(0, 0);
 
-    max_speed = 2;
-    max_force = .09;
+    max_speed = 3;
+    max_force = .15;
 }
 void Boid::boundary_check() {
     // if (position.x > WIDTH) {
@@ -78,13 +78,45 @@ Vec2 Boid::align(vector<Boid> boids) {
     }
 }
 
+Vec2 Boid::cohesion(vector<Boid> boids) {
+    float fov = 50;
+
+    Vec2 total_force(0, 0);
+
+    int visible_boids = 0;
+    for (int i = 0; i < boids.size(); i++) {
+        float distance = position.distance(boids[i].position);
+
+        if (distance > 0 && distance < fov) {
+            total_force.addV(boids[i].position);
+            visible_boids++;
+        }
+    }
+
+    if (visible_boids > 0) {
+        total_force.divideS((float)visible_boids);
+        total_force.subV(position);
+        total_force.normalize();
+        total_force.multiplyS(max_speed); 
+        Vec2 steering_force = Vec2::subtract(total_force, velocity);
+        steering_force.limit(max_force);
+        return steering_force;
+    } else {
+        Vec2 zero(0, 0);
+        return zero;
+    }
+}
+
+
+
 void Boid::update(vector<Boid> boids) {
     boundary_check();
 
     // flocking
     Vec2 alignment_force = align(boids);
     acceleration.addV(alignment_force);
-
+    Vec2 chsn = cohesion(boids);
+    acceleration.addV(chsn);
     // slow down acceleration
     acceleration.multiplyS(.35);
 
