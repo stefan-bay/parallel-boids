@@ -19,8 +19,8 @@ Boid::Boid(float x, float y) {
     velocity = Vec2(.5 * cos(phi), .5 *sin(phi));
     acceleration = Vec2(0, 0);
 
-    max_speed = 3;
-    max_force = .15;
+    max_speed = 2;
+    max_force = .9;
 }
 void Boid::boundary_check() {
     // if (position.x > WIDTH) {
@@ -50,7 +50,7 @@ void Boid::boundary_check() {
 }
 
 Vec2 Boid::align(vector<Boid> boids) {
-    float fov = 30;
+    float fov = 75;
 
     Vec2 total_force(0, 0);
 
@@ -79,7 +79,7 @@ Vec2 Boid::align(vector<Boid> boids) {
 }
 
 Vec2 Boid::cohesion(vector<Boid> boids) {
-    float fov = 50;
+    float fov = 75;
 
     Vec2 total_force(0, 0);
 
@@ -97,7 +97,7 @@ Vec2 Boid::cohesion(vector<Boid> boids) {
         total_force.divideS((float)visible_boids);
         total_force.subV(position);
         total_force.normalize();
-        total_force.multiplyS(max_speed); 
+        total_force.multiplyS(max_speed);
         Vec2 steering_force = Vec2::subtract(total_force, velocity);
         steering_force.limit(max_force);
         return steering_force;
