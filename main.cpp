@@ -158,6 +158,10 @@ void display_boids(float count) {
         }
 
         window.display();
+        // capture time when doing processing
+        // subtract how much time the computation took by time between frames.
+        // sleep remaining time
+        // -- how long it took to draw per frame --
         sf::sleep(sf::milliseconds(10));
     }
 

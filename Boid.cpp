@@ -19,8 +19,8 @@ Boid::Boid(float x, float y) {
     velocity = Vec2(.5 * cos(phi), .5 *sin(phi));
     acceleration = Vec2(0, 0);
 
-    max_speed = 2;
-    max_force = .9;
+    max_speed = 3;
+    max_force = .15;
 }
 void Boid::boundary_check() {
     // if (position.x > WIDTH) {
@@ -79,7 +79,7 @@ Vec2 Boid::align(vector<Boid> boids) {
 }
 
 Vec2 Boid::cohesion(vector<Boid> boids) {
-    float fov = 75;
+    float fov = 50;
 
     Vec2 total_force(0, 0);
 
