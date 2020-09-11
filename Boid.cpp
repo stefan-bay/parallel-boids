@@ -107,16 +107,52 @@ Vec2 Boid::cohesion(vector<Boid> boids) {
     }
 }
 
+Vec2 Boid::separation(vector<Boid> boids) {
+    float fov = 50;
+
+    Vec2 total_force(0, 0);
+
+    int visible_boids = 0;
+    for (int i = 0; i < boids.size(); i++) {
+        float distance = position.distance(boids[i].position);
+
+        if (distance > 0 && distance < fov) {
+            Vec2 difference = Vec2::subtract(position, boids[i].position);
+            difference.divideS(distance*distance);
+            total_force.addV(difference);
+            visible_boids++;
+        }
+    }
+
+    if (visible_boids > 0) {
+        total_force.divideS((float)visible_boids);
+        // total_force.subV(position);
+        total_force.normalize();
+        total_force.multiplyS(max_speed);
+        Vec2 steering_force = Vec2::subtract(total_force, velocity);
+        steering_force.limit(max_force);
+        return steering_force;
+    } else {
+        Vec2 zero(0, 0);
+        return zero;
+    }
+}
+
 
 
 void Boid::update(vector<Boid> boids) {
     boundary_check();
 
     // flocking
+
     Vec2 alignment_force = align(boids);
     acceleration.addV(alignment_force);
     Vec2 chsn = cohesion(boids);
     acceleration.addV(chsn);
+
+    Vec2 sep = separation(boids);
+    acceleration.addV(sep);
+
     // slow down acceleration
     acceleration.multiplyS(.35);
 

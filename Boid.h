@@ -21,6 +21,7 @@ public:
 
     Vec2 align(vector<Boid> boids);
     Vec2 cohesion(vector<Boid> boids);
+    Vec2 separation(vector<Boid> boids);
     void update(vector<Boid> boids);
 
 private:
