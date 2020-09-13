@@ -10,6 +10,7 @@ using namespace std;
 #include "Boid.h"
 #include "defaults.h"
 
+#include <omp.h>
 
 #include <fstream>
 #include <csignal>
@@ -109,14 +110,14 @@ void simulate_boids(string file, float count) {
 
         // output their positions
         for (int i = 0; i < boids.size(); i++) {
-            // boids[i].output(out);
             float values[] = {boids[i].position.x, boids[i].position.y, boids[i].velocity.x, boids[i].velocity.y};
             fwrite(&values, sizeof(float), 4, out);
         }
 
-        // move boids TODO: PARALLELIZE
+        #pragma omp parallel for
         for (int i = 0; i < boids.size(); i++) {
             boids[i].update(boids);
+            // cout << omp_get_num_threads() << endl;
         }
     }
     fclose(out);

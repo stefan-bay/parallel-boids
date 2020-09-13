@@ -7,23 +7,26 @@ CXX = g++
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = boids.out
 SFML=
+CPFLAGS=
 # uncomment these to skip sfml compilation
-# SFML=-D SKIPSFML=1
-# LDFLAGS=
+SFML=-D SKIPSFML=1
+LDFLAGS=
+# uncomment for parallel version
+# CPFLAGS=-fopenmp
 
 all: $(TARGET)
 
 main.o: main.cpp
-	$(CXX) -c main.cpp $(SFML)
+	$(CXX) -c main.cpp $(CPFLAGS) $(SFML)
 
 Vec2.o: Vec2.cpp
-	$(CXX) -c Vec2.cpp
+	$(CXX) -c Vec2.cpp $(CPFLAGS)
 
 Boid.o:
-	$(CXX) -c Boid.cpp
+	$(CXX) -c Boid.cpp $(CPFLAGS)
 
 $(TARGET): main.o Vec2.o Boid.o
-	$(CXX) main.o Vec2.o Boid.o -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(CPFLAGS) main.o Vec2.o Boid.o -o $(TARGET) $(LDFLAGS)
 
 .PHONY: clean
 
