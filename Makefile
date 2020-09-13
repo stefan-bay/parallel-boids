@@ -6,11 +6,14 @@ CXX = g++
 # INCLUDE = -I $(SFMLPATH)/include
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = boids.out
+SFML=
+# uncomment this to skip sfml compilation
+# SFML=-D SKIPSFML=1
 
 all: $(TARGET)
 
 main.o: main.cpp
-	$(CXX) -c main.cpp
+	$(CXX) -c main.cpp $(SFML)
 
 Vec2.o: Vec2.cpp
 	$(CXX) -c Vec2.cpp

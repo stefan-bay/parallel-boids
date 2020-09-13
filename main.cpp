@@ -1,7 +1,10 @@
 #include <iostream>
 using namespace std;
 
+// set "SFML" in makefile to skip compilation of SFML
+#ifndef SKIPSFML
 #include <SFML/Graphics.hpp>
+#endif
 
 #include "Vec2.h"
 #include "Boid.h"
@@ -12,13 +15,16 @@ using namespace std;
 #include <csignal>
 
 #include <stdio.h>
+#include <vector>
 
 #include <string>
 #include <sstream>
 
 
 void simulate_boids(float count);
+#ifndef SKIPSFML
 void display_boids(float count);
+#endif
 
 sig_atomic_t should_exit = 0;
 
@@ -59,6 +65,11 @@ int main(int argc, char *argv[])
         cout << "simulating " << b_count << " boids..." << endl;
         simulate = true;
     } else if (command == "display") {
+        #ifdef SKIPSFML
+        cout << "SFML is not compiled... exiting" << endl;
+        exit(1);
+        #endif
+
         cout << "displaying " << "boids..." << endl;
         display = true;
     } else {
@@ -69,7 +80,9 @@ int main(int argc, char *argv[])
     if (simulate) {
         simulate_boids(b_count);
     } else if (display) {
+        #ifndef SKIPSFML
         display_boids(b_count);
+        #endif
     }
 
     return 0;
@@ -107,6 +120,7 @@ void simulate_boids(float count) {
     fclose(out);
 }
 
+#ifndef SKIPSFML
 void display_boids(float count) {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
 
@@ -125,15 +139,14 @@ void display_boids(float count) {
     while (window.isOpen() && ftell(in) <= (filesize - count))
     {
         if (should_exit) {
-            cout << "Exiting..." << endl;
             fclose(in);
+            window.close();
             exit(0);
         }
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) {
-                cout << "Exiting..." << endl;
                 fclose(in);
                 window.close();
                 exit(0);
@@ -173,3 +186,4 @@ void display_boids(float count) {
 
     return;
 }
+#endif
