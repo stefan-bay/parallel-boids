@@ -21,9 +21,9 @@ using namespace std;
 #include <sstream>
 
 
-void simulate_boids(float count);
+void simulate_boids(string file, float count);
 #ifndef SKIPSFML
-void display_boids(float count);
+void display_boids(string file, float count);
 #endif
 
 sig_atomic_t should_exit = 0;
@@ -39,16 +39,18 @@ int main(int argc, char *argv[])
     // overide ctrl-c
     signal(SIGINT, exithandler);
 
-    if (argc < 2) {
-        cout << "usage: " << argv[0] << " [simulate | display] boid_count" << endl;
+    if (argc < 3) {
+        cout << "usage: " << argv[0] << " [simulate | display] file (boid_count)" << endl;
+        cout << "default boid_count= 100" << endl;
         exit(1);
     }
     string command = string(argv[1]);
+    string file = string(argv[2]);
     string scount;
     int b_count = BOID_COUNT;
-    if (argc > 2) {
+    if (argc > 3) {
         try {
-            scount = string(argv[2]);
+            scount = string(argv[3]);
             b_count = stoi(scount);
             if (b_count < 1)
                 throw range_error("NO");
@@ -78,18 +80,18 @@ int main(int argc, char *argv[])
     }
 
     if (simulate) {
-        simulate_boids(b_count);
+        simulate_boids(file, b_count);
     } else if (display) {
         #ifndef SKIPSFML
-        display_boids(b_count);
+        display_boids(file, b_count);
         #endif
     }
 
     return 0;
 }
 
-void simulate_boids(float count) {
-    FILE *out = fopen("data.dat", "a");
+void simulate_boids(string file, float count) {
+    FILE *out = fopen(file.c_str(), "a");
 
     vector<Boid> boids;
     // initialize boids
@@ -121,7 +123,7 @@ void simulate_boids(float count) {
 }
 
 #ifndef SKIPSFML
-void display_boids(float count) {
+void display_boids(string file, float count) {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Boids");
 
     vector<sf::CircleShape> shapes;
@@ -131,7 +133,7 @@ void display_boids(float count) {
       shapes.push_back(shape);
     }
 
-    FILE *in = fopen("data.dat", "r");
+    FILE *in = fopen(file.c_str(), "r");
     fseek(in, 0, SEEK_END);
     size_t filesize = ftell(in);
     fseek(in, 0, SEEK_SET);
