@@ -1,6 +1,8 @@
 #ifndef VEC2_H_
 #define VEC2_H_
 
+#include <vector>
+
 class Vec2 {
 
 public:

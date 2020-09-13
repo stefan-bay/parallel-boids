@@ -7,8 +7,9 @@ CXX = g++
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = boids.out
 SFML=
-# uncomment this to skip sfml compilation
+# uncomment these to skip sfml compilation
 # SFML=-D SKIPSFML=1
+# LDFLAGS=
 
 all: $(TARGET)
 
