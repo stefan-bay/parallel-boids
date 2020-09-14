@@ -32,6 +32,8 @@
 *.app
 *.txt
 *.dat
+boids_parallel
+boids_serial
 
 # Mac
 *.DS_Store

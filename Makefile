@@ -5,7 +5,7 @@
 CXX = g++
 # INCLUDE = -I $(SFMLPATH)/include
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-TARGET = boids.out
+TARGET = boids
 SFML=
 CPFLAGS=
 # uncomment these to skip sfml compilation
@@ -16,19 +16,24 @@ LDFLAGS=
 
 all: $(TARGET)
 
-main.o: main.cpp
-	$(CXX) -c main.cpp $(CPFLAGS) $(SFML)
+# main.o: main.cpp
+# 	$(CXX) -c main.cpp $(CPFLAGS) $(SFML)
+#
+# Vec2.o: Vec2.cpp
+# 	$(CXX) -c Vec2.cpp $(CPFLAGS)
+#
+# Boid.o:
+# 	$(CXX) -c Boid.cpp $(CPFLAGS)
+#
+# $(TARGET): main.o Vec2.o Boid.o
+# 	$(CXX) $(CPFLAGS) main.o Vec2.o Boid.o -o $(TARGET) $(LDFLAGS)
 
-Vec2.o: Vec2.cpp
-	$(CXX) -c Vec2.cpp $(CPFLAGS)
+$(TARGET):
+	$(CXX) -fopenmp -D USE_PARALLEL=1 $(SFML) main.cpp Vec2.cpp Boid.cpp -o $(TARGET)_parallel $(LDFLAGS)
+	$(CXX) $(SFML) main.cpp Vec2.cpp Boid.cpp -o $(TARGET)_serial $(LDFLAGS)
 
-Boid.o:
-	$(CXX) -c Boid.cpp $(CPFLAGS)
-
-$(TARGET): main.o Vec2.o Boid.o
-	$(CXX) $(CPFLAGS) main.o Vec2.o Boid.o -o $(TARGET) $(LDFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ data.txt data.dat $(TARGET)
+	rm -f *.o *~ data.txt data.dat $(TARGET)_parallel $(TARGET)_serial

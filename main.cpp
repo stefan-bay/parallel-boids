@@ -11,9 +11,11 @@ using namespace std;
 #include "defaults.h"
 
 // only include OpenMP when skipping SFML (MCSCN)
-#ifdef SKIPSFML
+#ifdef USE_PARALLEL
 #include <omp.h>
 #endif
+
+#include <chrono>
 
 #include <fstream>
 #include <csignal>
@@ -25,7 +27,7 @@ using namespace std;
 #include <sstream>
 
 
-void simulate_boids(string file, float count);
+void simulate_boids(string file, float count, int seconds);
 #ifndef SKIPSFML
 void display_boids(string file, float count);
 #endif
@@ -44,22 +46,30 @@ int main(int argc, char *argv[])
     signal(SIGINT, exithandler);
 
     if (argc < 3) {
-        cout << "usage: " << argv[0] << " [simulate | display] file (boid_count)" << endl;
+        cout << "usage: " << argv[0] << " [simulate | display] file boid_count seconds" << endl;
         cout << "default boid_count= 100" << endl;
+        cout << "default seconds= 60" << endl;
         exit(1);
     }
     string command = string(argv[1]);
     string file = string(argv[2]);
     string scount;
     int b_count = BOID_COUNT;
+    int seconds = TIME_SECONDS;
     if (argc > 3) {
         try {
             scount = string(argv[3]);
             b_count = stoi(scount);
+            if (argc > 4) {
+                string sseconds = string(argv[4]);
+                seconds = stoi(sseconds);
+                if (seconds < 1)
+                    throw invalid_argument(sseconds);
+            }
             if (b_count < 1)
-                throw range_error("NO");
-        } catch (exception const &e) {
-            cout << "error: invalid integer " << scount << endl;
+                throw invalid_argument(scount);
+        } catch (invalid_argument & ia) {
+            cout << "error: invalid integer " << ia.what() << endl;
             exit(1);
         }
     }
@@ -68,7 +78,7 @@ int main(int argc, char *argv[])
     bool display = false;
 
     if (command == "simulate") {
-        cout << "simulating " << b_count << " boids..." << endl;
+        cout << "simulating " << b_count << " boids for " << seconds << " seconds" << endl;
         simulate = true;
     } else if (command == "display") {
         #ifdef SKIPSFML
@@ -84,7 +94,7 @@ int main(int argc, char *argv[])
     }
 
     if (simulate) {
-        simulate_boids(file, b_count);
+        simulate_boids(file, b_count, seconds);
     } else if (display) {
         #ifndef SKIPSFML
         display_boids(file, b_count);
@@ -94,7 +104,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void simulate_boids(string file, float count) {
+void simulate_boids(string file, float count, int seconds) {
     FILE *out = fopen(file.c_str(), "a");
 
     vector<Boid> boids;
@@ -105,7 +115,10 @@ void simulate_boids(string file, float count) {
         boids.push_back(b);
     }
 
-    while (true) {
+    // set initial time
+    chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
+    chrono::duration<int> time_span = chrono::duration_cast<chrono::duration<int>>(chrono::high_resolution_clock::now() - start);
+    while (time_span.count() < seconds) {
         if (should_exit) {
             fclose(out);
             exit(0);
@@ -117,12 +130,18 @@ void simulate_boids(string file, float count) {
             fwrite(&values, sizeof(float), 4, out);
         }
 
+        #ifdef USE_PARALLEL
         #pragma omp parallel for
+        #endif
         for (int i = 0; i < boids.size(); i++) {
             boids[i].update(boids);
             // cout << omp_get_num_threads() << endl;
         }
+
+        // update time
+        time_span = chrono::duration_cast<chrono::duration<int>>(chrono::high_resolution_clock::now() - start);
     }
+    cout << "total elapsed time: " << time_span.count() << " seconds" << endl;
     fclose(out);
 }
 
