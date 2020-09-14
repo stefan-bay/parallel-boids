@@ -10,7 +10,10 @@ using namespace std;
 #include "Boid.h"
 #include "defaults.h"
 
+// only include OpenMP when skipping SFML (MCSCN)
+#ifdef SKIPSFML
 #include <omp.h>
+#endif
 
 #include <fstream>
 #include <csignal>
@@ -139,6 +142,7 @@ void display_boids(string file, float count) {
     size_t filesize = ftell(in);
     fseek(in, 0, SEEK_SET);
 
+    sf:: Clock clock;
     while (window.isOpen() && ftell(in) <= (filesize - count))
     {
         if (should_exit) {
@@ -174,11 +178,10 @@ void display_boids(string file, float count) {
         }
 
         window.display();
-        // capture time when doing processing
-        // subtract how much time the computation took by time between frames.
-        // sleep remaining time
-        // -- how long it took to draw per frame --
-        sf::sleep(sf::milliseconds(10));
+        sf::Time elapsed1 = clock.getElapsedTime();
+
+        sf::sleep(sf::milliseconds(12 - elapsed1.asMilliseconds()));
+        clock.restart();
     }
 
     cout << "Exiting..." << endl;
