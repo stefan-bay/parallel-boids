@@ -23,26 +23,6 @@ Boid::Boid(float x, float y) {
     max_force = .15;
 }
 void Boid::boundary_check() {
-    // if (position.x > WIDTH) {
-    //     float tmp = position.y;
-    //     position.x = 0;
-    //     position.y = HEIGHT - tmp;
-    // }
-    // if (position.y > HEIGHT) {
-    //     float tmp = position.x;
-    //     position.y = 0;
-    //     position.x = WIDTH - tmp;
-    // }
-    // if (position.x < 0) {
-    //     float tmp = position.y;
-    //     position.x = WIDTH;
-    //     position.y = HEIGHT - tmp;
-    // }
-    // if (position.y < 0) {
-    //     float tmp = position.x;
-    //     position.y = HEIGHT;
-    //     position.x = WIDTH - tmp;
-    // }
     if (position.x < 0) position.x += WIDTH;
 	if (position.y < 0) position.y += HEIGHT;
 	if (position.x > WIDTH) position.x -= WIDTH;
@@ -126,7 +106,7 @@ Vec2 Boid::separation(vector<Boid> boids) {
 
     if (visible_boids > 0) {
         total_force.divideS((float)visible_boids);
-        // total_force.subV(position);
+
         total_force.normalize();
         total_force.multiplyS(max_speed);
         Vec2 steering_force = Vec2::subtract(total_force, velocity);
@@ -147,6 +127,7 @@ void Boid::update(vector<Boid> boids) {
 
     Vec2 alignment_force = align(boids);
     acceleration.addV(alignment_force);
+    
     Vec2 chsn = cohesion(boids);
     acceleration.addV(chsn);
 

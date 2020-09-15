@@ -10,7 +10,7 @@ using namespace std;
 #include "Boid.h"
 #include "defaults.h"
 
-// only include OpenMP when skipping SFML (MCSCN)
+// set -D USE_PARALLEL=1 when compiling with openmp
 #ifdef USE_PARALLEL
 #include <omp.h>
 #endif
@@ -111,7 +111,6 @@ void simulate_boids(string file, float count, int seconds) {
     // initialize boids
     for (int i = 0; i < count; i++) {
         Boid b(rand()%WIDTH, rand()%HEIGHT);
-        // Boid b(WIDTH/2, HEIGHT/2);
         boids.push_back(b);
     }
 
@@ -135,7 +134,6 @@ void simulate_boids(string file, float count, int seconds) {
         #endif
         for (int i = 0; i < boids.size(); i++) {
             boids[i].update(boids);
-            // cout << omp_get_num_threads() << endl;
         }
 
         // update time
