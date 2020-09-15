@@ -117,7 +117,7 @@ void simulate_boids(string file, float count, int seconds) {
 
     // set initial time
     chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
-    chrono::duration<int> time_span = chrono::duration_cast<chrono::duration<int>>(chrono::high_resolution_clock::now() - start);
+    chrono::duration<int> time_span = chrono::duration_cast<chrono::duration<int> >(chrono::high_resolution_clock::now() - start);
     while (time_span.count() < seconds) {
         if (should_exit) {
             fclose(out);
@@ -139,7 +139,7 @@ void simulate_boids(string file, float count, int seconds) {
         }
 
         // update time
-        time_span = chrono::duration_cast<chrono::duration<int>>(chrono::high_resolution_clock::now() - start);
+        time_span = chrono::duration_cast<chrono::duration<int> >(chrono::high_resolution_clock::now() - start);
     }
     cout << "total elapsed time: " << time_span.count() << " seconds" << endl;
     fclose(out);
